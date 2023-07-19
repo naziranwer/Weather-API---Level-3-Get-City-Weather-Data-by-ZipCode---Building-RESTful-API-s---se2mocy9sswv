@@ -1,25 +1,59 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const weatherController = require('../controllers/weatherControllers');
+const weatherController = require("../controllers/weatherController");
 
-router.get('/city/zipcode/:code', async (req, res) => {
-router.get('/city/zipcode/:code', async (req, res) => {
-  const { code } = req.params;
+/*
+  Instructions for students:
+  Implement the route handler for retrieving the weather data for a city by its zipcode.
 
+  Route:
+    GET /city/zipcode/:code
+
+  Input:
+    - :code (string): The zipcode of the city for which weather data needs to be retrieved.
+
+  Output:
+    - If the city zipcode is found in the database, send a JSON response with the following structure and a status code of 200:
+      {
+        "status": "success",
+        "message": "Weather data retrieved",
+        "data": { ... } // Weather data object for the specified city
+      }
+
+    - If the city zipcode is not found in the database, send a JSON response with the following structure and a status code of 404:
+      {
+        "status": "error",
+        "message": "Failed to retrieve weather data"
+        "error": "City not found"
+      }
+
+  Tips:
+    - Use the weatherController.getWeatherDataByZipCode() function to retrieve the weather data for the specified city.
+    - Pass the zipcode from the request parameters to the getWeatherDataByZipCode() function.
+    - Handle the returned result and send the appropriate JSON response based on the result.
+
+*/
+
+// Level 3: Get City Weather Data by ZipCode
+router.get("/city/zipcode/:code", async (req, res) => {
+  // TODO: Implement this function
   try {
-    const weatherData = await weatherController.getWeatherDataByZipCode(code);
-    res.status(200).json({
-      status: 'success',
-      message: 'Weather data retrieved',
-      data: weatherData,
+    const zipCode = req.params.code;
+    const citydata = await weatherController.getWeatherDataByZipCode(zipCode);
+    res.json({
+      status: "success",
+      message: "Weather data retrieved",
+      data: citydata.forecast,
     });
-  } catch (error) {
+  } catch (err) {
+    // console.log(err);
     res.status(404).json({
-      status: 'error',
-      message: 'Failed to retrieve weather data',
-      error: 'City not found',
+      status: "error",
+      message: "ZipCode not found",
+      error: "ZipCode not found",
     });
   }
+  console.log(citydata);
 });
 
 module.exports = router;
